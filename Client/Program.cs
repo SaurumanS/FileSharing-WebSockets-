@@ -42,7 +42,12 @@ namespace Client
                 {
                     GetFileDetails();
                     GetFile();
-                }catch(Exception e) { Console.WriteLine(e.Message); }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message); 
+                    break;
+                }
             }
         }
         static void GetFileDetails()

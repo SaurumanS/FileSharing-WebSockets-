@@ -37,6 +37,15 @@ namespace Server
                 Console.WriteLine("Сервер запущен...");
                 current = listenSocket.Accept();
                 Console.WriteLine($"Клиент подключен: {current.RemoteEndPoint.ToString()}");
+
+                Task.Run(() =>
+                {
+                    while (SocketConnected(current))
+                    {
+                    }
+
+                    Console.WriteLine($"Клиент отключился: {current.RemoteEndPoint.ToString()}");
+                });
             }
             catch (Exception ex)
             {
@@ -64,6 +73,7 @@ namespace Server
 
             }
         }
+        
         static void SendFileInfo(Socket current)
         {
             fileDetails = new FileDetails();
@@ -99,6 +109,16 @@ namespace Server
             file.Close();
             Console.WriteLine("Файл отправлен");
             Thread.Sleep(1000);
+        }
+        
+        static bool SocketConnected(Socket s)
+        {
+            bool part1 = s.Poll(1000, SelectMode.SelectRead);
+            bool part2 = (s.Available == 0);
+            if (part1 && part2)
+                return false;
+            else
+                return true;
         }
 
     }
